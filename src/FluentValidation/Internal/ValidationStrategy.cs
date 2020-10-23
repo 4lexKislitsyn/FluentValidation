@@ -27,6 +27,7 @@ namespace FluentValidation.Internal {
 		private List<string> _ruleSets;
 		private bool _throw = false;
 		private IValidatorSelector _customSelector;
+		private string _exceptionMessage;
 
 		internal ValidationStrategy() {
 		}
@@ -122,6 +123,17 @@ namespace FluentValidation.Internal {
 			_throw = true;
 			return this;
 		}
+		/// <summary>
+		/// Indicates that the validator should throw an exception if it fails, rather than return a validation result.
+		/// </summary>
+		/// <param name="exceptionMessage">The message for exception to throw.</param>
+		/// <returns></returns>
+		public ValidationStrategy<T> ThrowOnFailures(string exceptionMessage) {
+			if (exceptionMessage == null) throw new ArgumentNullException(nameof(exceptionMessage));
+			_throw = true;
+			_exceptionMessage = exceptionMessage;
+			return this;
+		}
 
 		private IValidatorSelector GetSelector() {
 			IValidatorSelector selector = null;
@@ -152,7 +164,8 @@ namespace FluentValidation.Internal {
 
 		internal ValidationContext<T> BuildContext(T instance) {
 			return new ValidationContext<T>(instance, new PropertyChain(), GetSelector()) {
-				ThrowOnFailures = _throw
+				ThrowOnFailures = _throw,
+				ExceptionMessage = _exceptionMessage
 			};
 		}
 	}

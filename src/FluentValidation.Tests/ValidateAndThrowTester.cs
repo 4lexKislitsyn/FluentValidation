@@ -22,6 +22,17 @@ namespace FluentValidation.Tests {
 		}
 
 		[Fact]
+		public void Throws_exception_with_message() {
+			var validator = new TestValidator {
+				v => v.RuleFor(x => x.Surname).NotNull()
+			};
+			var message = nameof(Throws_exception_with_message);
+
+			var exception = typeof(ValidationException).ShouldBeThrownBy(() => validator.ValidateAndThrowWithMessage(new Person(), message));
+			exception.Message.ShouldEqual(message);
+		}
+
+		[Fact]
 		public void Throws_exception_with_a_ruleset() {
 			var validator = new TestValidator {
 				v => v.RuleFor(x => x.Surname).NotNull()
@@ -49,6 +60,23 @@ namespace FluentValidation.Tests {
 					throw agrEx.InnerException;
 				}
 			});
+		}
+
+			[Fact]
+		public void Throws_exception_async_with_message() {
+			var validator = new TestValidator {
+				v => v.RuleFor(x => x.Surname).NotNull()
+			};
+			var message = nameof(Throws_exception_async);
+			var exception = typeof(ValidationException).ShouldBeThrownBy(() => {
+				try {
+					validator.ValidateAndThrowWithMessageAsync(new Person(), message).Wait();
+				}
+				catch (AggregateException agrEx) {
+					throw agrEx.InnerException;
+				}
+			});
+			exception.Message.ShouldEqual(message);
 		}
 
 		[Fact]

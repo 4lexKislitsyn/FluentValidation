@@ -372,7 +372,9 @@ namespace FluentValidation {
 		/// <param name="result"></param>
 		/// <exception cref="ValidationException"></exception>
 		protected virtual void RaiseValidationException(ValidationContext<T> context, ValidationResult result) {
-			throw new ValidationException(result.Errors);
+			throw string.IsNullOrWhiteSpace(context.ExceptionMessage)
+				? new ValidationException(result.Errors)
+				: new ValidationException(context.ExceptionMessage, result.Errors);
 		}
 	}
 }

@@ -137,6 +137,12 @@ namespace FluentValidation {
 		public bool ThrowOnFailures { get; internal set; }
 
 		/// <summary>
+		/// Message for exception if <see cref="ThrowOnFailures"/> is set true.
+		/// Defaults to false.
+		/// </summary>
+		public string ExceptionMessage { get; internal set; }
+
+		/// <summary>
 		/// Gets or creates generic validation context from non-generic validation context.
 		/// </summary>
 		/// <param name="context"></param>

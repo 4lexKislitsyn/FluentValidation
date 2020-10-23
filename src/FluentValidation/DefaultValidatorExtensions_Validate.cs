@@ -65,6 +65,19 @@ namespace FluentValidation {
 		}
 
 		/// <summary>
+		/// Performs validation and then throws an exception with message if validation fails.
+		/// This method is a shortcut for: Validate(instance, options => options.ThrowOnFailures());
+		/// </summary>
+		/// <param name="validator">The validator this method is extending.</param>
+		/// <param name="instance">The instance of the type we are validating.</param>
+		/// <param name="exceptionMessage">The message for exception to throw.</param>
+		public static void ValidateAndThrowWithMessage<T>(this IValidator<T> validator, T instance, string exceptionMessage) {
+			validator.Validate(instance, options => {
+				options.ThrowOnFailures(exceptionMessage);
+			});
+		}
+
+		/// <summary>
 		/// Performs validation asynchronously and then throws an exception if validation fails.
 		/// This method is a shortcut for: ValidateAsync(instance, options => options.ThrowOnFailures());
 		/// </summary>
@@ -74,6 +87,20 @@ namespace FluentValidation {
 		public static async Task ValidateAndThrowAsync<T>(this IValidator<T> validator, T instance, CancellationToken cancellationToken = default) {
 			await validator.ValidateAsync(instance, options => {
 				options.ThrowOnFailures();
+			}, cancellationToken);
+		}
+
+		/// <summary>
+		/// Performs validation asynchronously and then throws an exception with message if validation fails.
+		/// This method is a shortcut for: ValidateAsync(instance, options => options.ThrowOnFailures());
+		/// </summary>
+		/// <param name="validator">The validator this method is extending.</param>
+		/// <param name="instance">The instance of the type we are validating.</param>
+		/// <param name="exceptionMessage">The message for exception to throw.</param>
+		/// <param name="cancellationToken"></param>
+		public static async Task ValidateAndThrowWithMessageAsync<T>(this IValidator<T> validator, T instance, string exceptionMessage, CancellationToken cancellationToken = default) {
+			await validator.ValidateAsync(instance, options => {
+				options.ThrowOnFailures(exceptionMessage);
 			}, cancellationToken);
 		}
 
